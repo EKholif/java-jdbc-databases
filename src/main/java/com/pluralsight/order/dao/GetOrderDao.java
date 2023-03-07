@@ -19,6 +19,7 @@ public class GetOrderDao {
 
     /**
      * Constructor
+     *
      * @param database Database object
      */
     public GetOrderDao(Database database) {
@@ -27,13 +28,14 @@ public class GetOrderDao {
 
     /**
      * Gets an order by its ID
+     *
      * @param paramsDto Object with the parameters for the operation
      * @return Object with the main information of an order
      */
     public OrderDto getOrderById(ParamsDto paramsDto) {
         OrderDto orderDto = null;
 
-        try (Connection con = null;
+        try (Connection con = database.getConnection();
              PreparedStatement ps = createPreparedStatement(con, paramsDto.getOrderId());
              ResultSet rs = createResultSet(ps)
         ) {
@@ -47,23 +49,36 @@ public class GetOrderDao {
 
     /**
      * Creates a PreparedStatement object to get an order
-     * @param con Connnection object
+     *
+     * @param con     Connnection object
      * @param orderId Order ID to set on the PreparedStatement
      * @return A PreparedStatement object
      * @throws SQLException In case of an error
      */
     private PreparedStatement createPreparedStatement(Connection con, long orderId) throws SQLException {
 
-        return null;
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setLong(1, orderId);
+        return ps;
+
+
     }
+
 
     /**
      * Creates a ResultSet object to get the results of the query
+     *
      * @param ps PreparedStatement object to create the query
      * @return A ResultSet object
      * @throws SQLException In case of an error
      */
     private ResultSet createResultSet(PreparedStatement ps) throws SQLException {
-        return null;
+        ResultSet rs = null;
+        try {
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return rs;
     }
 }
