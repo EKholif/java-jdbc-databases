@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * DAO to get an order
  */
 public class GetOrderDao {
-    private String query = "SELECT * FROM orders o WHERE o.order_id = ?";
+    private String query = "SELECT * FROM orders WHERE order_id = ?";
     private Database database;
 
     /**
@@ -36,8 +36,8 @@ public class GetOrderDao {
         OrderDto orderDto = null;
 
         try (Connection con = database.getConnection();
-             PreparedStatement ps = createPreparedStatement(con, paramsDto.getOrderId());
-             ResultSet rs = createResultSet(ps)
+             PreparedStatement ps = createPreparedStatement(con,paramsDto,getOrderById());
+             ResultSet rs = createResultSet(ps);
         ) {
 
             if(rs.next()) {
