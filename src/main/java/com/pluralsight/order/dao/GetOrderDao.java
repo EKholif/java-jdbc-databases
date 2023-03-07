@@ -40,13 +40,19 @@ public class GetOrderDao {
              ResultSet rs = createResultSet(ps)
         ) {
 
-        } catch (SQLException ex) {
-            ExceptionHandler.handleException(ex);
+            if(rs.next()) {
+                orderDto = new OrderDto();
+                orderDto.setOrderId(rs.getLong("order_id"));
+                orderDto.setCustomerId(rs.getLong("order_customer_id"));
+                orderDto.setDate(rs.getTimestamp("order_date"));
+                orderDto.setStatus(rs.getString("order_status"));
+            }
+        } catch (SQLException e) {
+            ExceptionHandler.handleException(e);
         }
 
-        return orderDto;
     }
-
+}
     /**
      * Creates a PreparedStatement object to get an order
      *
@@ -73,12 +79,7 @@ public class GetOrderDao {
      * @throws SQLException In case of an error
      */
     private ResultSet createResultSet(PreparedStatement ps) throws SQLException {
-        ResultSet rs = null;
-        try {
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return rs;
+
+        return ps.executeQuery();
     }
 }
