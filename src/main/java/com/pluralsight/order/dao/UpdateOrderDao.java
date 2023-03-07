@@ -6,6 +6,7 @@ import com.pluralsight.order.util.ExceptionHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -28,12 +29,16 @@ public class UpdateOrderDao {
      * @param paramsDto Object with the parameters for the operation
      * @return Number of affected rows
      */
+
+
     public int updateOrderStatus(ParamsDto paramsDto) {
         int numberResults = 0;
 
-        try (Connection con = null;
-             PreparedStatement ps = createPreparedStatement(con, paramsDto)
-        ) {
+        try (Connection con = database.getConnection())
+        {
+          ResultSet rs =   createPreparedStatement(con, paramsDto ).executeQuery();
+
+
 
         } catch (SQLException ex) {
             ExceptionHandler.handleException(ex);
@@ -49,8 +54,14 @@ public class UpdateOrderDao {
      * @return A PreparedStatement object
      * @throws SQLException In case of an error
      */
-    private PreparedStatement createPreparedStatement(Connection con, ParamsDto paramsDto) throws SQLException {
+    private PreparedStatement createPreparedStatement(Connection con, ParamsDto paramsDto ) throws SQLException {
 
-        return null;
+        PreparedStatement ps = con.prepareStatement(query);
+
+        ps.setString(1, paramsDto.getStatus());
+        ps.setLong(2, paramsDto.getOrderId());
+
+        return ps;
+
     }
 }
