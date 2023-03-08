@@ -1,5 +1,6 @@
 package com.pluralsight.order.dao;
 
+import com.pluralsight.order.dto.OrderDto;
 import com.pluralsight.order.dto.ParamsDto;
 import com.pluralsight.order.util.Database;
 import com.pluralsight.order.util.ExceptionHandler;
@@ -30,9 +31,16 @@ public class TotalOrderDao {
     public BigDecimal getTotalAllPaidOrders(ParamsDto paramsDto) {
         BigDecimal result = null;
 
-        try (Connection con = null;
+        try (Connection con = database.getConnection();
              CallableStatement cs = createCallableStatement(con, paramsDto.getCustomerId())
+               cs.execute();
         ) {
+//            if(rs.next()) {
+//                orderDto = new OrderDto();
+//                orderDto.setOrderId(rs.getLong("order_id"));
+//                orderDto.setCustomerId(rs.getLong("order_customer_id"));
+//                orderDto.setDate(rs.getTimestamp("order_date"));
+//                orderDto.setStatus(rs.getString("order_status"));
 
         } catch (SQLException ex) {
             ExceptionHandler.handleException(ex);
@@ -50,6 +58,9 @@ public class TotalOrderDao {
      */
     private CallableStatement createCallableStatement(Connection con, long customerId) throws SQLException {
 
-        return null;
+        CallableStatement ps = con.prepareCall(query);
+        ps.setLong(1, customerId);
+        return ps;
+
     }
 }
