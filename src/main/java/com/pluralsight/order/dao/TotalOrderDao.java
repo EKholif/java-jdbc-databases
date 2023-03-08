@@ -32,15 +32,16 @@ public class TotalOrderDao {
         BigDecimal result = null;
 
         try (Connection con = database.getConnection();
-             CallableStatement cs = createCallableStatement(con, paramsDto.getCustomerId())
-               cs.execute();
+             CallableStatement cs = createCallableStatement(con,
+                     paramsDto.getCustomerId())
+
         ) {
-//            if(rs.next()) {
-//                orderDto = new OrderDto();
-//                orderDto.setOrderId(rs.getLong("order_id"));
-//                orderDto.setCustomerId(rs.getLong("order_customer_id"));
-//                orderDto.setDate(rs.getTimestamp("order_date"));
-//                orderDto.setStatus(rs.getString("order_status"));
+            cs.execute();
+            try(ResultSet resultSet = cs.getResultSet()) {
+                if (resultSet != null && resultSet.next()) {
+                    result = resultSet.getBigDecimal(1);
+                }
+            }
 
         } catch (SQLException ex) {
             ExceptionHandler.handleException(ex);
@@ -58,9 +59,9 @@ public class TotalOrderDao {
      */
     private CallableStatement createCallableStatement(Connection con, long customerId) throws SQLException {
 
-        CallableStatement ps = con.prepareCall(query);
-        ps.setLong(1, customerId);
-        return ps;
 
+        CallableStatement cs = con.prepareCall(query);
+        cs.setLong(1, customerId);
+        return cs;
     }
 }
