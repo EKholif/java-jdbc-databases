@@ -59,7 +59,6 @@ public class UpdateOrderDao {
         PreparedStatement ps = con.prepareStatement(query);
 
         ps.setString(1, paramsDto.getStatus());
-        ps.setLong(2, paramsDto.getOrderId());
 
         return ps;
 
